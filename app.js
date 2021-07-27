@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const port = 3000
+const host = '103.14.20.210'
 const productRouter = require('./routes/product')
 const customerRouter = require('./routes/customer')
 const dessertRouter = require('./routes/dessert')
@@ -22,5 +23,5 @@ app.use('/api/v1', dessertRouter)
 app.use('/api/v1', authRouter)
 
 app.listen(port, () => {
-    console.log(`Example app listening at http://192.168.43.221:${port}`)
+    console.log(`Example app listening at http://${host}:${port}`)
 })
