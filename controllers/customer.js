@@ -24,7 +24,7 @@ exports.createCustomers = async (req, res, next) => {
         const dataCustomers = await Customers.create({
             name: req.body.name
         })
-        const message = `${dataCustomers.name} was created successfully`
+        const message = `${dataCustomers.name} created successfully`
         res.status(201).json({
             message: message,
             data: dataCustomers
@@ -44,7 +44,7 @@ exports.findCustomersById = async (req, res, next) => {
 
         !dataCustomers ?
             message = `Customer not found` :
-            message = `${dataCustomers.name} was fetched successfully`
+            message = `${dataCustomers.name} fetched successfully`
 
         res.status(201).json({
             message: message,
@@ -65,7 +65,7 @@ exports.updateCustomers = async (req, res, next) => {
 
         !updatedDataCustomers ?
             message = `Customer not found` :
-            message = `${updatedDataCustomers.name} was updated successfully`
+            message = `${updatedDataCustomers.name} updated successfully`
 
         res.status(201).json({
             message: message,
@@ -86,7 +86,7 @@ exports.deleteCustomers = async (req, res, next) => {
 
         !deletedDataCustomers ?
             message = `Customer not found` :
-            message = `${deletedDataCustomers.name} was deleted successfully`
+            message = `${deletedDataCustomers.name} deleted successfully`
 
         res.status(201).json({
             message: message,

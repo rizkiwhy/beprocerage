@@ -20,6 +20,9 @@ exports.findDesserts = async (req, res) => {
         })
         console.log(message)
     } catch (error) {
+        res.json({
+            message: error.message,
+        })
         console.log(`error: ${error}`)
     }
 }
@@ -35,14 +38,19 @@ exports.createDesserts = async (req, res) => {
             carbs: req.body.carbs,
             protein: req.body.protein
         })
-        const message = `Dessert ${dataDesserts.name} was created successfully`
+        const message = `Dessert ${dataDesserts.name} created successfully`
 
-        res.status(201).json({
+        res.json({
+            status: "success",
             message: message,
             data: dataDesserts
-        })
+        }).status(201)
         console.log(message)
     } catch (error) {
+        res.json({
+            status: "error",
+            message: error.message,
+        }).status(400)
         console.log(`error: ${error}`)
     }
 }
@@ -63,14 +71,19 @@ exports.updateDesserts = async (req, res) => {
 
         !updatedDesserts ?
             message = `Dessert not Found` :
-            message = `Dessert ${updatedDesserts.name} was updated successfully`
+            message = `Dessert ${updatedDesserts.name} updated successfully`
 
-        res.status(201).json({
+        res.json({
+            status: "success",
             message: message,
             data: updatedDesserts
-        })
+        }).status(201)
         console.log(message)
     } catch (error) {
+        res.json({
+            status: "error",
+            message: error.message,
+        }).status(400)
         console.log(`error: ${error}`)
     }
 }
@@ -84,14 +97,19 @@ exports.deleteDesserts = async (req, res) => {
 
         !deletedDesserts ?
             message = `Desserts not found` :
-            message = `Dessert ${deletedDesserts.name} was deleted successfully`
+            message = `Dessert ${deletedDesserts.name} deleted successfully`
 
-        res.status(201).json({
+        res.json({
+            status:"success",
             message: message,
             data: deletedDesserts
-        })
+        }).status(201)
         console.log(message)
     } catch (error) {
+        res.json({
+            status:"error",
+            message: error.message,
+        }).status(400)
         console.log(`error: ${error}`)
     }
 }

@@ -28,3 +28,19 @@ exports.loginUser = data => {
     });
     return schema.validateAsync(data)
 }
+
+exports.updateUser = data => {
+    const schema = Joi.object({
+        name: Joi.string()
+            .min(6)
+            .required(),
+        email: Joi.string()
+            .min(6)
+            .required()
+            .email(),
+        password: Joi.string()
+            .min(6)
+            .required(),
+    });
+    return schema.validateAsync(data)
+}
