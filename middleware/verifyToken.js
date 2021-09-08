@@ -13,14 +13,18 @@ module.exports = (req, res, next) => {
     }
 
     try {
+        // console.log(token)
         const verified = jwt.verify(token, process.env.TOKEN_SECRET)
+        // verified
+        // console.log(verified._id)
         req.user = verified
+        // console.log(req.user)
         next()
     } catch (error) {
         res.status(400).json({
             message: "Invalid Token"
         })
         console.log(`error: ${error}`)
-        console.log(`message: Invalid Token`)
+        // console.log(`message: Invalid Token`)
     }
 }

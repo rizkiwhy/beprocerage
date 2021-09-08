@@ -1,24 +1,26 @@
 require('../config/db')
 const Desserts = require('../models/dessert')
+const authController = require('../controllers/auth')
 
 // findDesserts
 exports.findDesserts = async (req, res) => {
 
     try {
-        // const dataDesserts = await Desserts.find()
         const dataDesserts = await Desserts.aggregate([
             {
                 $sort: { updatedAt: -1 }
             }
         ])
-        const message = `${dataDesserts.length} Desserts fetched`
+
+        const username = await authController.getUsername(req.user._id)
+        
+        const message = `fetched ${dataDesserts.length} Desserts`
 
         res.status(201).json({
             message: message,
-            data: dataDesserts,
-            // user: req.user
+            data: dataDesserts
         })
-        console.log(message)
+        console.log(`${username} ${message}`)
     } catch (error) {
         res.json({
             message: error.message,
@@ -38,6 +40,9 @@ exports.createDesserts = async (req, res) => {
             carbs: req.body.carbs,
             protein: req.body.protein
         })
+
+        const username = await authController.getUsername(req.user._id)
+
         const message = `Dessert ${dataDesserts.name} created successfully`
 
         res.json({
@@ -45,7 +50,7 @@ exports.createDesserts = async (req, res) => {
             message: message,
             data: dataDesserts
         }).status(201)
-        console.log(message)
+        console.log(`${message} by ${username}`)
     } catch (error) {
         res.json({
             status: "error",
@@ -66,6 +71,9 @@ exports.updateDesserts = async (req, res) => {
             carbs: req.body.carbs,
             protein: req.body.protein
         })
+
+        const username = await authController.getUsername(req.user._id)
+
         const updatedDesserts = await Desserts.findById(req.params.dessertId)
         let message
 
@@ -76,9 +84,9 @@ exports.updateDesserts = async (req, res) => {
         res.json({
             status: "success",
             message: message,
-            data: updatedDesserts
+            data: updatedDesserts,
         }).status(201)
-        console.log(message)
+        console.log(`${message} by ${username}`)
     } catch (error) {
         res.json({
             status: "error",
@@ -91,6 +99,8 @@ exports.updateDesserts = async (req, res) => {
 // deleteDesserts
 exports.deleteDesserts = async (req, res) => {
     try {
+        const username = await authController.getUsername(req.user._id)
+
         const deletedDesserts = await Desserts.findById(req.params.dessertId)
         await Desserts.deleteOne({ _id: req.params.dessertId })
         let message
@@ -104,7 +114,7 @@ exports.deleteDesserts = async (req, res) => {
             message: message,
             data: deletedDesserts
         }).status(201)
-        console.log(message)
+        console.log(`${message} by ${username}`)
     } catch (error) {
         res.json({
             status:"error",

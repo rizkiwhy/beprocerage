@@ -4,23 +4,54 @@ const authValidation = require('../validations/auth')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
+async function getUser(userId) {
+    return new Promise ((resolve, reject) => {
+        const user = Users.findById(userId)
+        if (user) {
+            resolve(user)
+        } else {
+            reject('User Not Found')
+        }
+    })
+}
+
+exports.getUsername = async (userId) => {
+    try {
+        const user = await getUser(userId)
+        return user.name
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 // find user
-exports.findUser = async (req, res) => {
+exports.getMyData = async (req, res) => {
     try {
         let message
 
-        console.log(req.params.userId)
+        async function user(userId) {
+            try {
+                const user = await getUser(userId)
+                return user
+            } catch (error) {
+                console.error(error)
+            }
+        }
 
-        const dataUser = await Users.findOne({ _id: req.params.userId })
+        const dataUser = await user(req.user._id) 
+
+        // const dataUser = await Users.findOne({ _id: req.user._id })
+
+        // const username = await this.getUsername(req.user._id)
 
         message = `User ${dataUser.name} found`
 
         res.status(201).json({
+            status: "succeess",
             message: message,
-            data: dataUser,
-            // user: req.user
+            user: dataUser
         })
-        console.log(message)
+        // console.log(message)
 
     } catch (error) {
         res.json({
@@ -65,7 +96,7 @@ exports.registerUser = async (req, res) => {
             email: req.body.email.toLowerCase(),
             password: hashedPassword
         })
-        message = `User ${dataUser.name} created susccessfully`
+        message = `User ${dataUser.name} registered susccessfully`
         res.json({
             status: "success",
             message: message,
@@ -74,6 +105,7 @@ exports.registerUser = async (req, res) => {
         console.log(message)
     } catch (error) {
         res.json({
+            status: "error",
             message: error.message,
         })
         console.log(`error: ${error.message}`)
@@ -137,13 +169,46 @@ exports.updateUser = async (req, res) => {
     }
 }
 
+// logout user
+exports.logoutUser = async (req, res) => {
+    try {
+        let message
+
+        message = "Signed out successfully"
+
+        const user = await Users.findOne({_id:req.params.userId})
+
+        res.json({
+            status: "success",
+            message: message,
+        }).status(201)
+        console.log(`${user.name} ${message}`)
+
+    } catch (error) {
+        res.json({
+            status: "error",
+            message: error.message,
+        }).status(400)
+        console.log(`error: ${error}`)
+    }
+}
+ 
 // login user
 exports.loginUser = async (req, res) => {
     try {
         let message
 
         // validate request
-        await authValidation.loginUser(req.body)
+        const { error } = await authValidation.loginUser(req.body)
+
+        // if(error) return res.status(400).send(error.details[0].message)
+        if (error) {
+            console.log(`error: ${error.details[0].message}`)
+            return res.json({
+                status: "error",
+                message: error.details[0].message
+            }).status(400)
+        }
 
         // check email exist
         const user = await Users.findOne({ email: req.body.email })
@@ -168,17 +233,18 @@ exports.loginUser = async (req, res) => {
         }
 
         // login success
-        const token = jwt.sign({ user }, process.env.TOKEN_SECRET)
+        const token = jwt.sign({
+            _id : user._id
+        }, process.env.TOKEN_SECRET)
         
-        message = `${user.name} login successfully`
+        message = `Signed in successfully`
         res.header('authorization', token).json({
             status: "success",
-            message: message,
+            message: "Signed in successfully",
             token: token,
             user: user
         }).status(200)
-        console.log(user)
-        console.log(token)
+        console.log(`${user.name} ${message}`)
     } catch (error) {
         res.json({
             status: "error",

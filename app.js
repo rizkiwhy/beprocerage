@@ -25,5 +25,5 @@ app.use('/api/v1', dessertRouter)
 app.use('/api/v1', authRouter)
 
 app.listen(port, () => {
-    console.log(`Example app listening at http://${host}:${port}`)
+    console.log(`beprocerage listening at http://${host}:${port}`)
 })
