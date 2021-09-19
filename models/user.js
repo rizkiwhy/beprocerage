@@ -15,12 +15,9 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
-        min: 6,
-        max: 1024
     },
 }, {
     timestamps: true
 })
 
-module.exports = mongoose.model('User', userSchema)
+module.exports = mongoose.model('Users', userSchema)

@@ -25,4 +25,4 @@ const Dessert = new mongoose.Schema({
     { timestamps: true }
 )
 
-module.exports = mongoose.model('Dessert', Dessert)
+module.exports = mongoose.model('Desserts', Dessert)

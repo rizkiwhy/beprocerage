@@ -1,12 +1,19 @@
 const express = require('express')
 const router = express.Router()
-const verify = require('../middleware/verifyToken')
-
+const verifyToken = require('../middleware/verifyToken')
 const dessertController = require('../controllers/dessert')
 
-router.get('/desserts', verify, dessertController.findDesserts)
-router.post('/desserts', verify, dessertController.createDesserts)
-router.put('/desserts/:dessertId', verify, dessertController.updateDesserts)
-router.delete('/desserts/:dessertId', verify, dessertController.deleteDesserts)
+router
+    .route('/desserts')
+    .get(verifyToken, dessertController.findDesserts)
+    .post(verifyToken, dessertController.createDesserts)
+// router.get('/desserts', verifyToken, dessertController.findDesserts)
+// router.post('/desserts', verifyToken, dessertController.createDesserts)
+router
+    .route('/desserts/:dessertId')
+    .put(verifyToken, dessertController.updateDesserts)
+    .delete(verifyToken, dessertController.deleteDesserts)
+// router.put('/desserts/:dessertId', verifyToken, dessertController.updateDesserts)
+// router.delete('/desserts/:dessertId', verifyToken, dessertController.deleteDesserts)
 
 module.exports = router

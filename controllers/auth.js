@@ -116,11 +116,10 @@ exports.registerUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
     
     try {
-        // console.log(req.params.userId)
-        let message
+        // console.log(req.body.password === undefined)
+        console.log(req.body)
 
-        // validate request
-        await authValidation.updateUser(req.body)
+        let message
 
         // check email exist
         const user = await Users.countDocuments({ email: req.body.email })
@@ -132,10 +131,6 @@ exports.updateUser = async (req, res) => {
                 message: message
             }).status(400)
         }
-        
-        // hash password
-        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(req.body.password, salt)
 
         const words = req.body.name.split(" ");
         for (let i = 0; i < words.length; i++) {
@@ -143,11 +138,28 @@ exports.updateUser = async (req, res) => {
         }
         const name = words.join(" ");
 
-        await Users.updateOne({ _id: req.params.userId }, {
-            name: name,
-            email: req.body.email,
-            password: hashedPassword
-        })
+        if (req.body.password === undefined) {
+            // validate request
+            await authValidation.updateUser(req.body)
+            
+            await Users.updateOne({ _id: req.params.userId }, {
+                name: name,
+                email: req.body.email,
+            })
+        } else {
+            // validate request
+            await authValidation.registerUser(req.body)
+
+            // hash password
+            const salt = await bcrypt.genSalt(10)
+            const hashedPassword = await bcrypt.hash(req.body.password, salt)
+            
+            await Users.updateOne({ _id: req.params.userId }, {
+                name: name,
+                email: req.body.email,
+                password: hashedPassword
+            })
+        }
 
         const dataUser = await Users.findById(req.params.userId)
 
