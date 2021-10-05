@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
-const certificationSchema = new mongoose.Schema ({
-    name: {
+const privilegeSchema = new mongoose.Schema ({
+    title: {
         type: String,
         required: true,
         min: 6,
@@ -13,17 +13,10 @@ const certificationSchema = new mongoose.Schema ({
         min: 6,
         unique: true
     },
-    numberOfMeetings: {
-        type: Number,
-        required: true
-    },
-    tags: {
-        type: [String],
-        required: true
-    },
-    level: {
+    icon: {
         type: String,
-        required: true
+        required: true,
+        min: 6
     },
     active: {
         type: Boolean,
@@ -33,4 +26,4 @@ const certificationSchema = new mongoose.Schema ({
     { timestamps: true }
 )
 
-module.exports = mongoose.model('Certifications', certificationSchema)
+module.exports = mongoose.model('Privileges', privilegeSchema)

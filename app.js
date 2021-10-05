@@ -2,11 +2,17 @@ const express = require('express')
 const app = express()
 const port = 3000
 const host = 'localhost'
-const productRouter = require('./routes/product')
-const customerRouter = require('./routes/customer')
 const dessertRouter = require('./routes/dessert')
 const expertiseRouter = require('./routes/expertise')
 const certificationRouter = require('./routes/certification')
+const assesorRouter = require('./routes/assesor')
+const privilegeRouter = require('./routes/privilege')
+const contactRouter = require('./routes/contact')
+const socialmediaRouter = require('./routes/socialmedia')
+const blogRouter = require('./routes/blog')
+const testimonialRouter = require('./routes/testimonial')
+const photoRouter = require('./routes/photo')
+const profileRouter = require('./routes/profile')
 const authRouter = require('./routes/auth')
 const path = require('path')
 const cors = require('cors')
@@ -39,12 +45,20 @@ app.use(cors(corsOptions));
 //     next()
 // })
 
-app.use('/api/v1', productRouter)
-app.use('/api/v1', customerRouter)
 app.use('/api/v1', dessertRouter)
-app.use('/api/v1', expertiseRouter)
-app.use('/api/v1', certificationRouter)
-app.use('/api/v1', authRouter)
+app.use('/api/v1', [
+    expertiseRouter, 
+    certificationRouter, 
+    assesorRouter, 
+    privilegeRouter, 
+    contactRouter, 
+    socialmediaRouter, 
+    blogRouter,
+    testimonialRouter,
+    photoRouter, 
+    profileRouter, 
+    authRouter 
+])
 app.use('/images', express.static(path.join(__dirname, 'images')))
 
 app.listen(port, () => {

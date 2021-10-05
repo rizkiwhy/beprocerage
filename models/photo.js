@@ -1,28 +1,26 @@
 const mongoose = require('mongoose')
 
-const userSchema = new mongoose.Schema({
+const photoSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
         min: 6,
-        max: 255
-    },
-    email: {
-        type: String,
-        required: true,
-        min: 6,
-        max: 255,
         unique: true
     },
-    password: {
+    image: {
         type: String,
+        required: true
+    },
+    width: {
+        type: String,
+        required: true
     },
     active: {
         type: Boolean,
         required: true
     }
-}, {
-    timestamps: true
-})
+},
+    { timestamps: true }
+)
 
-module.exports = mongoose.model('Users', userSchema)
+module.exports = mongoose.model('Photos', photoSchema)

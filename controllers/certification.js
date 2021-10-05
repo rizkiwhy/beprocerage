@@ -9,6 +9,9 @@ exports.findAllCertifications = async(req, res) => {
         
         const dataCertifications = await Certifications.aggregate([
             {
+                $match: { active: true }
+            },
+            {
                 $sort: { updatedAt: -1 }
             }
         ])
@@ -46,6 +49,7 @@ exports.findCertifications = async (req, res) => {
             message: message,
             data: dataCertifications
         })
+        // console.log(dataCertifications)
         console.log(`${username} ${message}`)
     } catch (error) {
         res.json({
@@ -58,6 +62,7 @@ exports.findCertifications = async (req, res) => {
 // createCertifications
 exports.createCertifications = async (req, res) => {
     try {
+        // console.log(req.body)
         let message
 
         // validate request
@@ -93,7 +98,8 @@ exports.updateCertifications = async (req, res) => {
             description: req.body.description,
             numberOfMeetings: req.body.numberOfMeetings,
             tags: req.body.tags,
-            level: req.body.level
+            level: req.body.level,
+            active: req.body.active,
         }
 
         const username = await authController.getUsername(req.user._id)
@@ -103,6 +109,10 @@ exports.updateCertifications = async (req, res) => {
         
         if (!certifications) {
             message = `Certification not Found`
+            res.json({
+                status: "error",
+                message: error.message,
+            }).status(400)
         } else {
                 await certificationsValidation.createCertifications(reqData)
                 await Certifications.updateOne({ _id: req.params.certificationId }, reqData)

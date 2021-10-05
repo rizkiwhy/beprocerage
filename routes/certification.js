@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const verifyToken = require('../middleware/verifyToken')
-const certificationController = require('../controllers/certifications')
+const certificationController = require('../controllers/certification')
 
 router.get('/all-certifications', certificationController.findAllCertifications)
 

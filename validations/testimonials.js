@@ -1,16 +1,11 @@
 const Joi = require('joi')
 
-exports.createExpertises = data => {
+exports.createTestimonials = data => {
     const schema = Joi.object({
         name: Joi.string()
                 .min(6)
                 .required(),
-        icon: Joi.string()
-                .min(6)
-                .required(),
-        abbr: Joi.string()
-                .min(2)
-                .max(4)
+        testimonial: Joi.string()
                 .required(),
         image: Joi.string()
                 .min(12)
@@ -21,17 +16,12 @@ exports.createExpertises = data => {
     return schema.validateAsync(data)
 }
 
-exports.updateExpertises = data => {
+exports.updateTestimonials = data => {
     const schema = Joi.object({
         name: Joi.string()
                 .min(6)
                 .required(),
-        icon: Joi.string()
-                .min(6)
-                .required(),
-        abbr: Joi.string()
-                .min(2)
-                .max(4)
+        testimonial: Joi.string()
                 .required(),
         active: Joi.boolean()
                 .required()

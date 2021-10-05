@@ -117,7 +117,7 @@ exports.updateUser = async (req, res) => {
     
     try {
         // console.log(req.body.password === undefined)
-        console.log(req.body)
+        // console.log(req.body)
 
         let message
 

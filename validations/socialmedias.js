@@ -1,18 +1,17 @@
 const Joi = require('joi')
 
-exports.createCertifications = data => {
+exports.createSocialMedias = data => {
     const schema = Joi.object({
-        name: Joi.string()
+        type: Joi.string()
+                .required()
+                .min(3),
+        value: Joi.string()
                 .required()
                 .min(6),
-        description: Joi.string()
+        icon: Joi.string()
                 .required()
                 .min(6),
-        numberOfMeetings: Joi.number()
-                .required(),
-        tags: Joi.array()
-                .required(),
-        level: Joi.string()
+        link: Joi.string()
                 .required(),
         active: Joi.boolean()
                 .required()

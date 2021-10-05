@@ -1,19 +1,16 @@
 const Joi = require('joi')
 
-exports.createCertifications = data => {
+exports.createPrivileges = data => {
     const schema = Joi.object({
-        name: Joi.string()
+        title: Joi.string()
                 .required()
                 .min(6),
         description: Joi.string()
                 .required()
                 .min(6),
-        numberOfMeetings: Joi.number()
-                .required(),
-        tags: Joi.array()
-                .required(),
-        level: Joi.string()
-                .required(),
+        icon: Joi.string()
+                .required()
+                .min(6),
         active: Joi.boolean()
                 .required()
     })

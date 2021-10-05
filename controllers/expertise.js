@@ -8,12 +8,11 @@ const fs = require('fs')
 // findAllExpertises
 exports.findAllExpertises = async(req, res) => {
     try {
-        // console.log(req.socket.remoteAddress)
-        // var ip = (req.headers['x-forwarded-for'] || '').split(',').pop().trim() || req.socket.remoteAddress
-
-        // console.log(req)
         
         const dataExpertises = await Expertises.aggregate([
+            {
+                $match: { active: true }
+            },
             {
                 $project : { name : 1, image : 1, abbr: 1, icon: 1 }
             },
@@ -22,44 +21,24 @@ exports.findAllExpertises = async(req, res) => {
             }
         ])
 
-        console.log(dataExpertises)
-        
-        // const dataCertifications = await Certifications.aggregate([
-        //     {
-        //         $sort: { updatedAt: -1 }
-        //     }
-        // ])
-
         let dataCertifications
-        // console.log(dataCertifications)
         for (let index = 0; index < dataExpertises.length; index++) {
             dataCertifications = await Certifications.aggregate([
                 {
                     $match: { tags: dataExpertises[index].abbr }
                 },
                 {
-                    $sort: { updatedAt: -1 }
+                    $sort: { level: 1 }
                 }
             ])
-            // dataCertifications = await Certifications.find({
-            //     tags:dataExpertises[index].abbr
-            // })
             dataExpertises[index].item = dataCertifications
         }
-        
-        console.log(dataExpertises)
 
-        // const newDataExpertises = new Array();
-
-        // console.log(dataExpertises.length)
-
-        // const username = await authController.getUsername(req.user._id)
-        
         const message = `fetched ${dataExpertises.length} Expertises`
 
         res.status(201).json({
             message: message,
-            data: dataExpertises
+            data: dataExpertises,
         })
         console.log(`${message}`)
     } catch (error) {
@@ -114,9 +93,10 @@ exports.createExpertises = async (req, res) => {
             name: req.body.name,
             icon: req.body.icon,
             abbr: req.body.abbr,
-            image: req.file.path
+            image: req.file.path,
+            active: req.body.active,
         }
-        console.log(req.file.path)
+        // console.log(req.file.path)
         // validate request
         await expertisesValidation.createExpertises(reqData)
 
@@ -161,18 +141,12 @@ exports.updateExpertises = async (req, res) => {
                     name: req.body.name,
                     icon: req.body.icon,
                     abbr: req.body.abbr,
+                    active: req.body.active,
                     image: req.file.path
                 }
                 // validate request
                 await expertisesValidation.createExpertises(reqData)
-                await Expertises.updateOne({ _id: req.params.expertiseId }, reqData
-                // {
-                //     name: req.body.name,
-                //     icon: req.body.icon,
-                //     abbr: req.body.abbr,
-                //     image: req.file.path,
-                // }
-                )
+                await Expertises.updateOne({ _id: req.params.expertiseId }, reqData)
                 try {
                     fs.unlinkSync(expertises.image)
                 } catch(err) {
@@ -185,6 +159,7 @@ exports.updateExpertises = async (req, res) => {
                     name: req.body.name,
                     icon: req.body.icon,
                     abbr: req.body.abbr,
+                    active: req.body.active,
                 })
             }
             if (expertises.name === req.body.name) {

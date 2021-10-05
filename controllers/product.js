@@ -11,7 +11,7 @@ exports.createProduct = (req, res, next) => {
     })
     next()
     console.log(message)
-    console.log(req.body)
+    // console.log(req.body)
 }
 
 exports.readProduct = (req, res, next) => {

@@ -1,20 +1,14 @@
 const mongoose = require('mongoose')
 
-const expertiseSchema = new mongoose.Schema({
+const testimonialSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        min: 6,
-        unique: true
+        min: 6
     },
-    icon: {
+    testimonial: {
         type: String,
         required: true
-    },
-    abbr: {
-        type: String,
-        required: true,
-        unique: true
     },
     image: {
         type: String,
@@ -28,4 +22,4 @@ const expertiseSchema = new mongoose.Schema({
     { timestamps: true }
 )
 
-module.exports = mongoose.model('Expertises', expertiseSchema)
+module.exports = mongoose.model('Testimonials', testimonialSchema)
