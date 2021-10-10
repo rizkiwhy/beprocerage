@@ -1,0 +1,6 @@
+{"_id":{"$oid":"615e35a87732318c8764350b"},"name":"Tenaga Penjualan","active":true,"createdAt":{"$date":"2021-10-06T23:47:52.915Z"},"updatedAt":{"$date":"2021-10-06T23:47:52.915Z"},"__v":0}
+{"_id":{"$oid":"615e35bb7732318c87643512"},"name":"Tenaga Administrasi Umum","active":true,"createdAt":{"$date":"2021-10-06T23:48:11.869Z"},"updatedAt":{"$date":"2021-10-06T23:48:11.869Z"},"__v":0}
+{"_id":{"$oid":"615e35dd7732318c87643519"},"name":"Asisten Profesional Akuntansi","active":true,"createdAt":{"$date":"2021-10-06T23:48:45.897Z"},"updatedAt":{"$date":"2021-10-06T23:48:45.897Z"},"__v":0}
+{"_id":{"$oid":"615e35f17732318c87643520"},"name":"Perancang Grafis dan Multimedia","active":true,"createdAt":{"$date":"2021-10-06T23:49:05.474Z"},"updatedAt":{"$date":"2021-10-06T23:49:05.474Z"},"__v":0}
+{"_id":{"$oid":"615e36077732318c87643527"},"name":"Pengembang Perangkat Lunak","active":true,"createdAt":{"$date":"2021-10-06T23:49:27.404Z"},"updatedAt":{"$date":"2021-10-06T23:49:27.404Z"},"__v":0}
+{"_id":{"$oid":"61600b656ed65905ebf5adb7"},"name":"Administrator Jaringan","active":true,"createdAt":{"$date":"2021-10-08T09:12:05.329Z"},"updatedAt":{"$date":"2021-10-08T09:12:05.329Z"},"__v":0}

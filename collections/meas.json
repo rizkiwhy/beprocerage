@@ -1,0 +1,2 @@
+{"_id":{"$oid":"615d791b03300c27a7d11105"},"name":"None Mea","active":true,"createdAt":{"$date":"2021-10-06T10:23:23.493Z"},"updatedAt":{"$date":"2021-10-06T10:23:23.493Z"},"__v":0}
+{"_id":{"$oid":"615d793303300c27a7d1110c"},"name":"Jasa TIK (e-Asean)","active":true,"createdAt":{"$date":"2021-10-06T10:23:47.728Z"},"updatedAt":{"$date":"2021-10-06T10:23:47.728Z"},"__v":0}

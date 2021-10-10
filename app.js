@@ -13,6 +13,12 @@ const blogRouter = require('./routes/blog')
 const testimonialRouter = require('./routes/testimonial')
 const photoRouter = require('./routes/photo')
 const profileRouter = require('./routes/profile')
+const clientRouter = require('./routes/client')
+const meaRouter = require('./routes/mea')
+const fieldRouter = require('./routes/field')
+const categoryRouter = require('./routes/category')
+const competencyunitRouter = require('./routes/competencyunit')
+const inboxRouter = require('./routes/inbox')
 const authRouter = require('./routes/auth')
 const path = require('path')
 const cors = require('cors')
@@ -57,6 +63,12 @@ app.use('/api/v1', [
     testimonialRouter,
     photoRouter, 
     profileRouter, 
+    clientRouter,
+    meaRouter,
+    fieldRouter,
+    categoryRouter,
+    competencyunitRouter,
+    inboxRouter,
     authRouter 
 ])
 app.use('/images', express.static(path.join(__dirname, 'images')))

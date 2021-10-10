@@ -7,6 +7,9 @@ const blogController = require('../controllers/blog')
 
 router.get('/beranda', blogController.findBeranda)
 router.get('/all-blogs', blogController.findAllBlogs)
+router.get('/blogs/:blogKey', blogController.findBlogsByKey)
+router.get('/detail-blog/:title', blogController.findBlogByTitle)
+router.get('/detail-blog/:sortItem', blogController.findAllBlogsSortBy)
 
 router
     .route('/blogs')

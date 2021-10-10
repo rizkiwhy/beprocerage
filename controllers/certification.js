@@ -62,17 +62,36 @@ exports.findCertifications = async (req, res) => {
 // createCertifications
 exports.createCertifications = async (req, res) => {
     try {
-        // console.log(req.body)
         let message
 
-        // validate request
-        await certificationsValidation.createCertifications(req.body)
+        if (!req.file) {
+            message = "Image not uploaded"
+            res.json({
+                status: "error",
+                message: message,
+            }).status(400)
+            console.log(`error: ${message}`)
+        }
 
-        const dataCertification = await Certifications.create(req.body)
+        const reqData = {
+            code: req.body.code,
+            name: req.body.name,
+            tags: req.body.tags,
+            category: req.body.category,
+            mea: req.body.mea,
+            field: req.body.field,
+            image: req.file.path,
+            active: req.body.active,
+        }
+
+        // validate request
+        await certificationsValidation.createCertifications(reqData)
+
+        const dataCertification = await Certifications.create(reqData)
 
         const username = await authController.getUsername(req.user._id)
 
-        message = `Certification ${dataCertification.name} created successfully`
+        message = `Schema ${dataCertification.name} created successfully`
 
         res.json({
             status: "success",
@@ -80,6 +99,9 @@ exports.createCertifications = async (req, res) => {
             data: dataCertification
         }).status(201)
         console.log(`${message} by ${username}`)
+        if (req.file) {
+            console.log(`Image of ${dataCertification.name} (${dataCertification.image}) added successfully by ${username}`)
+        }
     } catch (error) {
         res.json({
             status: "error",
@@ -93,14 +115,8 @@ exports.createCertifications = async (req, res) => {
 exports.updateCertifications = async (req, res) => {
 
     try {
-        const reqData = {
-            name: req.body.name,
-            description: req.body.description,
-            numberOfMeetings: req.body.numberOfMeetings,
-            tags: req.body.tags,
-            level: req.body.level,
-            active: req.body.active,
-        }
+
+        console.log(req)
 
         const username = await authController.getUsername(req.user._id)
         
@@ -108,18 +124,48 @@ exports.updateCertifications = async (req, res) => {
         let message
         
         if (!certifications) {
-            message = `Certification not Found`
+            message = `Schema not Found`
             res.json({
                 status: "error",
                 message: error.message,
             }).status(400)
         } else {
+            if (req.file) {
+                const reqData = {
+                    code: req.body.code,
+                    name: req.body.name,
+                    tags: req.body.tags,
+                    category: req.body.category,
+                    mea: req.body.mea,
+                    field: req.body.field,
+                    image: req.file.path,
+                    active: req.body.active,
+                }
+                // validate request
                 await certificationsValidation.createCertifications(reqData)
                 await Certifications.updateOne({ _id: req.params.certificationId }, reqData)
+                try {
+                    fs.unlinkSync(certifications.image)
+                } catch(err) {
+                    console.error(err)
+                }
+            } else {
+                // validate request
+                await certificationsValidation.updateCertifications(req.body)
+                await Certifications.updateOne({ _id: req.params.certificationId }, {
+                    code: req.body.code,
+                    name: req.body.name,
+                    tags: req.body.tags,
+                    category: req.body.category,
+                    mea: req.body.mea,
+                    field: req.body.field,
+                    active: req.body.active,
+                })
+            }
             if (certifications.name === req.body.name) {
                 message = `Certification ${certifications.name} updated successfully`
             } else {
-                const updatedCertifications = await Certifications.findById(req.params.certificationsId)
+                const updatedCertifications = await Certifications.findById(req.params.certificationId)
                 message = `Certification ${certifications.name} updated to ${updatedCertifications.name} successfully`
             }
         }
@@ -148,10 +194,15 @@ exports.deleteCertifications = async (req, res) => {
         let message
         
         if (!deletedCertifications) {
-            message = `Certification not found`
+            message = `Schema not found`
         } else {
             await Certifications.deleteOne({ _id: req.params.certificationId })
-            message = `Certification ${deletedCertifications.name} deleted successfully`
+            try {
+                fs.unlinkSync(certifications.image)
+            } catch(err) {
+                console.error(err)
+            }
+            message = `Schema ${deletedCertifications.name} deleted successfully`
         }
 
         res.json({
@@ -160,6 +211,7 @@ exports.deleteCertifications = async (req, res) => {
             data: deletedCertifications
         }).status(201)
         console.log(`${message} by ${username}`)
+        console.log(`Image of ${deletedCertifications.name} (${deletedCertifications.image}) removed successfully by ${username}`)
     } catch (error) {
         res.json({
             status:"error",

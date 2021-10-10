@@ -1,27 +1,36 @@
 const mongoose = require('mongoose')
 
 const certificationSchema = new mongoose.Schema ({
+    code: {
+        type: String,
+        required: true,
+        min: 24,
+        unique: true
+    },
     name: {
         type: String,
         required: true,
         min: 6,
         unique: true
     },
-    description: {
+    tags: {
+        type: String,
+        required: true
+    },
+    category: {
         type: String,
         required: true,
         min: 6,
-        unique: true
     },
-    numberOfMeetings: {
-        type: Number,
+    mea: {
+        type: String,
         required: true
     },
-    tags: {
-        type: [String],
+    field: {
+        type: String,
         required: true
     },
-    level: {
+    image: {
         type: String,
         required: true
     },

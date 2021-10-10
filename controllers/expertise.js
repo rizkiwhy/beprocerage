@@ -1,5 +1,6 @@
 require('../config/db')
 const Expertises = require('../models/expertise')
+const Competencyunits = require('../models/competencyunit')
 const Certifications = require('../models/certification')
 const expertisesValidation = require('../validations/expertises')
 const authController = require('../controllers/auth')
@@ -17,28 +18,43 @@ exports.findAllExpertises = async(req, res) => {
                 $project : { name : 1, image : 1, abbr: 1, icon: 1 }
             },
             {
-                $sort: { updatedAt: -1 }
+                $sort: { abbr: 1 }
             }
         ])
-
-        let dataCertifications
-        for (let index = 0; index < dataExpertises.length; index++) {
-            dataCertifications = await Certifications.aggregate([
+        
+        for (let j = 0; j < dataExpertises.length; j++) {
+            const dataCertifications = await Certifications.aggregate([
                 {
-                    $match: { tags: dataExpertises[index].abbr }
+                    $match: { active: true }
                 },
                 {
-                    $sort: { level: 1 }
+                    $sort: { tags: 1 }
                 }
             ])
-            dataExpertises[index].item = dataCertifications
+    
+            for (let index = 0; index < dataCertifications.length; index++) {
+                let competencyunits = await Competencyunits.aggregate([
+                    {
+                        $match: { active: true, codeSchema: dataCertifications[index].code },
+                    },
+                    {
+                        $project : { name : 1, code: 1 }
+                    },
+                    {
+                        $sort: { updatedAt: -1 }
+                    }
+                ])
+                dataCertifications[index].competencyunits = competencyunits
+                dataExpertises[j].schema = dataCertifications[j]
+            }
         }
-
+        
+        // console.log(dataExpertises)
         const message = `fetched ${dataExpertises.length} Expertises`
 
         res.status(201).json({
             message: message,
-            data: dataExpertises,
+            dataExpertises: dataExpertises,
         })
         console.log(`${message}`)
     } catch (error) {
@@ -96,7 +112,7 @@ exports.createExpertises = async (req, res) => {
             image: req.file.path,
             active: req.body.active,
         }
-        // console.log(req.file.path)
+        
         // validate request
         await expertisesValidation.createExpertises(reqData)
 

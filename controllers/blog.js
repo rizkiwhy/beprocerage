@@ -4,15 +4,201 @@ const blogsValidation = require('../validations/blogs')
 const authController = require('./auth')
 const fs = require('fs')
 
+exports.findAllBlogsSortBy = async (req, res) => {
+    try {
+        let dataBlogs
+        if (req.params.sortItem === "Title, Z-A") {
+            dataBlogs = await Blogs.find(
+                {
+                    tags: { $nin: ["Beranda"] },
+                    active: true    
+                }).sort( { title: -1 } )
+        } else if (req.params.sortItem === "Title, A-Z") {
+            dataBlogs = await Blogs.find(
+                {
+                    tags: { $nin: ["Beranda"] },
+                    active: true    
+                }).sort( { title: 1 } )
+        } else if (req.params.sortItem === "Oldest") {
+            dataBlogs = await Blogs.find(
+                {
+                    tags: { $nin: ["Beranda"] },
+                    active: true    
+                }).sort( { updatedAt: 1 } )
+        } else if (req.params.sortItem === "Latest") {
+            dataBlogs = await Blogs.find(
+                {
+                    tags: { $nin: ["Beranda"] },
+                    active: true    
+                }).sort( { updatedAt: -1 } )
+        }
+
+        const tempDataBlogs = new Array()
+
+        for (let index = 0; index < dataBlogs.length; index++) {
+            const element = dataBlogs[index].updatedAt;
+            const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const test = new Date(element);
+
+            tempDataBlogs.push({
+                _id: dataBlogs[index]._id,
+                title: dataBlogs[index].title,
+                subtitle: dataBlogs[index].subtitle,
+                description: dataBlogs[index].description.length <= 320? dataBlogs[index].description : `${dataBlogs[index].description.slice(0,320)}...`,
+                image: dataBlogs[index].image,
+                tags: dataBlogs[index].tags.toString(),
+                active: dataBlogs[index].active,
+                publisher: dataBlogs[index].publisher,
+                updatedAt: `${days[test.getDay()]}, ${test.getDate()} ${months[test.getMonth()]} ${test.getFullYear()} ${test.getHours()}:${test.getMinutes()}:${test.getSeconds()}`
+            })
+            
+        }
+
+        const message = `fetched ${dataBlogs.length} Blogs`
+
+        res.status(201).json({
+            message: message,
+            data: tempDataBlogs,
+        })
+        console.log(`${message}`)
+    } catch (error) {
+        res.json({
+            message: error.message,
+        })
+        console.log(`error: ${error}`)
+    }
+}
+
+exports.findBlogByTitle = async (req, res) => {
+    try {
+        let message
+
+        const param = req.params.title
+        const title = param.replace("%20"," ")
+
+        const dataBlogs = await Blogs.find({
+            title: title,
+            active: true    
+        }).sort( { updatedAt: -1 } )
+
+        if (!dataBlogs) {
+            message = `Blog not Found`
+            res.json({
+                message: message,
+                data: tempDataBlogs,
+            }).status(400)
+            console.log(`${message}`)
+        }
+        console.log(dataBlogs)
+
+        const tempDataBlogs = new Array()
+
+        for (let index = 0; index < dataBlogs.length; index++) {
+            const element = dataBlogs[index].updatedAt;
+            const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const test = new Date(element);
+
+            tempDataBlogs.push({
+                _id: dataBlogs[index]._id,
+                title: dataBlogs[index].title,
+                subtitle: dataBlogs[index].subtitle,
+                description: dataBlogs[index].description,
+                image: dataBlogs[index].image,
+                tags: dataBlogs[index].tags.toString(),
+                active: dataBlogs[index].active,
+                publisher: dataBlogs[index].publisher,
+                updatedAt: `${days[test.getDay()]}, ${test.getDate()} ${months[test.getMonth()]} ${test.getFullYear()} ${test.getHours()}:${test.getMinutes()}:${test.getSeconds()}`
+            })
+            
+        }
+
+        message = `fetched ${dataBlogs.length} Blogs`
+
+        res.status(201).json({
+            message: message,
+            data: tempDataBlogs,
+        })
+        console.log(`${message}`)
+    } catch (error) {
+        res.json({
+            message: error.message,
+        })
+        console.log(`error: ${error}`)
+    }
+}
+
+exports.findBlogsByKey = async (req, res) => {
+    try {
+        // console.log(req.params.blogKey)
+        const tags = ["Berita", "Kegiatan"]
+        let dataBlogs
+        if (tags.includes(req.params.blogKey)) {
+            dataBlogs = await Blogs.find(
+            {
+                tags: { $in: req.params.blogKey},
+                active: true    
+            }).sort( { updatedAt: -1 } )
+        } else if(req.params.blogKey === "Semua") {
+            dataBlogs = await Blogs.find(
+                {
+                    tags: { $nin: ["Beranda"] },
+                    active: true    
+                }).sort( { updatedAt: -1 } )
+        } else {
+            dataBlogs = await Blogs.find({
+                title: req.params.blogKey,
+                active: true    
+            }).sort( { updatedAt: -1 } )
+            console.log(dataBlogs)
+        }
+
+        const tempDataBlogs = new Array()
+
+        for (let index = 0; index < dataBlogs.length; index++) {
+            const element = dataBlogs[index].updatedAt;
+            const days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+            const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+            const test = new Date(element);
+
+            tempDataBlogs.push({
+                _id: dataBlogs[index]._id,
+                title: dataBlogs[index].title,
+                subtitle: dataBlogs[index].subtitle,
+                description: dataBlogs[index].description.length <= 320? dataBlogs[index].description : `${dataBlogs[index].description.slice(0,320)}...`,
+                image: dataBlogs[index].image,
+                tags: dataBlogs[index].tags.toString(),
+                active: dataBlogs[index].active,
+                publisher: dataBlogs[index].publisher,
+                updatedAt: `${days[test.getDay()]}, ${test.getDate()} ${months[test.getMonth()]} ${test.getFullYear()} ${test.getHours()}:${test.getMinutes()}:${test.getSeconds()}`
+            })
+            
+        }
+
+        const message = `fetched ${dataBlogs.length} Blogs`
+
+        res.status(201).json({
+            message: message,
+            data: tempDataBlogs,
+        })
+        console.log(`${message}`)
+    } catch (error) {
+        res.json({
+            message: error.message,
+        })
+        console.log(`error: ${error}`)
+    }
+}
+
 exports.findAllBlogs = async (req, res) => {
     try {
         const dataBlogs = await Blogs.find(
             {
                 tags: { $nin: ["Beranda"] },
                 active: true    
-            })
+            }).sort( { updatedAt: -1 } )
 
-        // console.log(dataBlogs)
         const tempDataBlogs = new Array()
 
         for (let index = 0; index < dataBlogs.length; index++) {

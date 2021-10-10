@@ -1,0 +1,4 @@
+{"_id":{"$oid":"615e5f7a536baea96ccf4fa3"},"name":"Perdagangan besar dan eceran, Reparasi dan Perawatan Mobil dan Motor","active":true,"createdAt":{"$date":"2021-10-07T02:46:18.018Z"},"updatedAt":{"$date":"2021-10-07T02:46:18.018Z"},"__v":0}
+{"_id":{"$oid":"615e5f90536baea96ccf4faa"},"name":"Informasi dan Komunikasi","active":true,"createdAt":{"$date":"2021-10-07T02:46:40.002Z"},"updatedAt":{"$date":"2021-10-07T02:46:40.002Z"},"__v":0}
+{"_id":{"$oid":"615e5fb9536baea96ccf4fb7"},"name":"Aktivitas Profesional, Ilmiah dan Teknis","active":true,"createdAt":{"$date":"2021-10-07T02:47:21.794Z"},"updatedAt":{"$date":"2021-10-07T02:47:21.794Z"},"__v":0}
+{"_id":{"$oid":"615e5fc5536baea96ccf4fbe"},"name":"Administrasi Pemerintahan, Pertahanan dan Jaminan Sosial Wajib","active":true,"createdAt":{"$date":"2021-10-07T02:47:33.802Z"},"updatedAt":{"$date":"2021-10-07T02:47:33.802Z"},"__v":0}

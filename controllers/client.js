@@ -1,32 +1,32 @@
 require('../config/db')
-const Testimonials = require('../models/testimonial')
-const testimonialsValidation = require('../validations/testimonials')
+const Clients = require('../models/client')
+const clientsValidation = require('../validations/clients')
 const authController = require('./auth')
 const fs = require('fs')
 
-// findAllTestimonials
-exports.findAllTestimonials = async(req, res) => {
+// findAllClients
+exports.findAllClients = async(req, res) => {
     try {
         
-        const dataTestimonials = await Testimonials.aggregate([
+        const dataClients = await Clients.aggregate([
             {
                 $match: { active: true }
             },
             {
-                $project : { name : 1, image : 1, testimonial: 1 }
+                $project : { name : 1, period : 1, numberOfParticipants : 1, image : 1, article: 1, instagram: 1 }
             },
             {
                 $sort: { updatedAt: -1 }
             }
         ])
 
-        const message = `fetched ${dataTestimonials.length} Testimonials`
+        // console.log(dataClients)
 
-        // console.log(dataTestimonials)
+        const message = `fetched ${dataClients.length} Clients`
 
         res.status(201).json({
             message: message,
-            data: dataTestimonials,
+            data: dataClients,
         })
         console.log(`${message}`)
     } catch (error) {
@@ -37,11 +37,11 @@ exports.findAllTestimonials = async(req, res) => {
     }
 }
 
-// findTestimonials
-exports.findTestimonials = async (req, res) => {
+// findClients
+exports.findClients = async (req, res) => {
 
     try {
-        const dataTestimonials = await Testimonials.aggregate([
+        const dataClients = await Clients.aggregate([
             {
                 $sort: { updatedAt: -1 }
             }
@@ -49,11 +49,11 @@ exports.findTestimonials = async (req, res) => {
 
         const username = await authController.getUsername(req.user._id)
         
-        const message = `fetched ${dataTestimonials.length} Testimonials`
+        const message = `fetched ${dataClients.length} Clients`
 
         res.status(201).json({
             message: message,
-            data: dataTestimonials
+            data: dataClients
         })
         console.log(`${username} ${message}`)
     } catch (error) {
@@ -64,8 +64,8 @@ exports.findTestimonials = async (req, res) => {
     }
 }
 
-// createTestimonials
-exports.createTestimonials = async (req, res) => {
+// createClients
+exports.createClients = async (req, res) => {
     try {
         let message
 
@@ -79,28 +79,30 @@ exports.createTestimonials = async (req, res) => {
         }
         const reqData = {
             name: req.body.name,
-            testimonial: req.body.testimonial,
+            period: req.body.period,
+            numberOfParticipants: req.body.numberOfParticipants,
+            article: req.body.article,
+            instagram: req.body.instagram,
             image: req.file.path,
             active: req.body.active,
         }
-        // console.log(req.file.path)
         // validate request
-        await testimonialsValidation.createTestimonials(reqData)
+        await clientsValidation.createClients(reqData)
 
-        const dataTestimonial = await Testimonials.create(reqData)
+        const dataClient = await Clients.create(reqData)
 
         const username = await authController.getUsername(req.user._id)
 
-        message = `Testimonial ${dataTestimonial.name} created successfully`
+        message = `Client ${dataClient.name} created successfully`
 
         res.json({
             status: "success",
             message: message,
-            data: dataTestimonial
+            data: dataClient
         }).status(201)
         console.log(`${message} by ${username}`)
         if (req.file) {
-            console.log(`Image of ${dataTestimonial.name} (${dataTestimonial.image}) added successfully by ${username}`)
+            console.log(`Image of ${dataClient.name} (${dataClient.image}) added successfully by ${username}`)
         }
     } catch (error) {
         res.json({
@@ -111,59 +113,65 @@ exports.createTestimonials = async (req, res) => {
     }
 }
 
-// updateTestimonials
-exports.updateTestimonials = async (req, res) => {
+// updateClients
+exports.updateClients = async (req, res) => {
 
     try {
         const username = await authController.getUsername(req.user._id)
         
-        const testimonials = await Testimonials.findById(req.params.testimonialId)
+        const clients = await Clients.findById(req.params.clientId)
         let message
         
-        if (!testimonials) {
-            message = `Testimonial not Found`
+        if (!clients) {
+            message = `Client not Found`
         } else {
             if (req.file) {
                 const reqData = {
                     name: req.body.name,
-                    testimonial: req.body.testimonial,
+                    period: req.body.period,
+                    numberOfParticipants: req.body.numberOfParticipants,
+                    article: req.body.article,
+                    instagram: req.body.instagram,
                     image: req.file.path,
                     active: req.body.active,
                 }
                 // validate request
-                await testimonialsValidation.createTestimonials(reqData)
-                await Testimonials.updateOne({ _id: req.params.testimonialId }, reqData)
+                await clientsValidation.createClients(reqData)
+                await Clients.updateOne({ _id: req.params.clientId }, reqData)
                 try {
-                    fs.unlinkSync(testimonial.image)
+                    fs.unlinkSync(client.image)
                 } catch(err) {
                     console.error(err)
                 }
             } else {
                 // validate request
-                await testimonialsValidation.updateTestimonials(req.body)
-                await Testimonials.updateOne({ _id: req.params.testimonialId }, {
+                await clientsValidation.updateClients(req.body)
+                await Clients.updateOne({ _id: req.params.clientId }, {
                     name: req.body.name,
-                    testimonial: req.body.testimonial,
+                    period: req.body.period,
+                    numberOfParticipants: req.body.numberOfParticipants,
+                    article: req.body.article,
+                    instagram: req.body.instagram,
                     active: req.body.active,
                 })
             }
-            if (testimonials.name === req.body.name) {
-                message = `Testimonial ${testimonials.name} updated successfully`
+            if (clients.name === req.body.name) {
+                message = `Client ${clients.name} updated successfully`
             } else {
-                const updatedTestimonials = await Testimonials.findById(req.params.testimonialId)
-                message = `Testimonial ${testimonials.name} updated to ${updatedTestimonials.name} successfully`
+                const updatedClients = await Clients.findById(req.params.clientId)
+                message = `Client ${clients.name} updated to ${updatedClients.name} successfully`
             }
         }
 
         res.json({
             status: "success",
             message: message,
-            data: testimonials,
+            data: clients,
         }).status(201)
         console.log(`${message} by ${username}`)
         if (req.file) {
-            const updatedTestimonials = await Testimonials.findById(req.params.testimonialId)
-            console.log(`${testimonials.image} removed and ${updatedTestimonials.image} added successfully by ${username}`)
+            const updatedClients = await Clients.findById(req.params.clientId)
+            console.log(`${clients.image} removed and ${updatedClients.image} added successfully by ${username}`)
             // console.log(`Image of ${req.body.name} (${req.file.path}) added successfully by ${username}`)
         }
         if (req.file) {
@@ -177,33 +185,33 @@ exports.updateTestimonials = async (req, res) => {
     }
 }
 
-// deleteTestimonials
-exports.deleteTestimonials = async (req, res) => {
+// deleteClients
+exports.deleteClients = async (req, res) => {
     try {
         const username = await authController.getUsername(req.user._id)
 
-        const deletedTestimonials = await Testimonials.findById(req.params.testimonialId)
+        const deletedClients = await Clients.findById(req.params.clientId)
         let message
         
-        if (!deletedTestimonials) {
-            message = `Testimonial not found`
+        if (!deletedClients) {
+            message = `Client not found`
         } else {
-            await Testimonials.deleteOne({ _id: req.params.testimonialId })
+            await Clients.deleteOne({ _id: req.params.clientId })
             try {
-                fs.unlinkSync(deletedTestimonials.image)
+                fs.unlinkSync(deletedClients.image)
             } catch(err) {
                 console.error(err)
             }
-            message = `Testimonial ${deletedTestimonials.name} deleted successfully`
+            message = `Client ${deletedClients.name} deleted successfully`
         }
 
         res.json({
             status:"success",
             message: message,
-            data: deletedTestimonials
+            data: deletedClients
         }).status(201)
         console.log(`${message} by ${username}`)
-        console.log(`Image of ${deletedTestimonials.name} (${deletedTestimonials.image}) removed successfully by ${username}`)
+        console.log(`Image of ${deletedClients.name} (${deletedClients.image}) removed successfully by ${username}`)
     } catch (error) {
         res.json({
             status:"error",
