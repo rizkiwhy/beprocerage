@@ -28,9 +28,9 @@ const cors = require('cors')
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
-// app.use(cors({ origin: ['http://localhost:8080'], }))
+// app.use(cors({ origin: ['http://103.148.113.86:8080'], }))
 const corsOptions ={
-    origin:'http://localhost:8080', 
+    origin:'http://103.148.113.86', 
     credentials:true,            //access-control-allow-credentials:true
     optionSuccessStatus:200
 }
