@@ -28,7 +28,7 @@ const cors = require('cors')
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
-app.use(cors({ origin: ['http://103.148.113.86:8080'], }))
+// app.use(cors({ origin: ['http://103.148.113.86:8080'], }))
 const corsOptions ={
     // res.setHeader('Access-Control-Allow-Origin', '*')
     // res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
