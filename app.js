@@ -30,7 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json())
 // app.use(cors({ origin: ['http://103.148.113.86:8080'], }))
 const corsOptions ={
-    origin:'http://103.148.113.86', 
+    origin:'https://beprocerage.herokuapp.com/', 
     credentials:true,            //access-control-allow-credentials:true
     optionSuccessStatus:200
 }
