@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
-const port = 3000
-const host = 'localhost'
+// const port = 80
+const host = 'beprocerage.herokuapp.com'
 const dessertRouter = require('./routes/dessert')
 const expertiseRouter = require('./routes/expertise')
 const certificationRouter = require('./routes/certification')
