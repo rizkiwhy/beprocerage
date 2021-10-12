@@ -73,6 +73,6 @@ app.use('/api/v1', [
 ])
 app.use('/images', express.static(path.join(__dirname, 'images')))
 
-app.listen(port, () => {
+app.listen(process.env.PORT || port, () => {
     console.log(`beprocerage listening at http://${host}:${port}`)
 })
